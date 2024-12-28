@@ -4,3 +4,14 @@
 - Membuat CRUD sederhana dengan API
 - Membuat CRUD dengan relasi dengan API
 - Menambah kolom dari tabel yang sudah ada
+- menyambungkan ke github dan mengaktifkan github action
+- mencoba seeder dan factory 
+- coba run dengan cara testing
+
+
+# Todo
+- Push image DockerHub
+- Deployment Kubernetes
+- Managed host Ansible
+- Monitoring & Visualisasi make Prameteus dan Grafana 
+- modiv aplikiasnya
