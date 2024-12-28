@@ -1,0 +1,36 @@
+name: Deploy to InfinityFree
+
+on:
+  push:
+    branches: [ main ] # Memicu workflow saat ada push ke branch main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1' # Sesuaikan dengan versi PHP yang Anda gunakan
+          extensions: zip # Ekstensi zip diperlukan untuk kompresi
+
+      - name: Install Composer dependencies
+        run: composer install --no-dev --optimize-autoloader
+
+      - name: Create ZIP archive
+        run: |
+          zip -r project.zip * -x "vendor/*" ".git/*" ".github/*" "storage/*" "bootstrap/cache/*"
+
+      - name: Deploy to InfinityFree via FTP
+        uses: actions/ftp-deploy@v2
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./project.zip
+          remote-dir: ${{ secrets.FTP_REMOTE_DIR }}
+          cleanup: true # Menghapus file zip lokal setelah diupload
