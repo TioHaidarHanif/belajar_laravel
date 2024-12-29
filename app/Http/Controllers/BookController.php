@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\BookPostRequest;
 use App\Models\Book;
 
 class BookController extends Controller
@@ -15,18 +16,36 @@ class BookController extends Controller
      }
  
      // Tambah buku baru
-     public function store(Request $request)
+     public function store(BookPostRequest $request)
      {
-         $request->validate([
-             'title' => 'required|string',
-             'author' => 'required|string',
-             'year' => 'required|integer',
-         ]);
+
+        //  $request->validate([
+        //      'title' => 'required|string',
+        //      'author' => 'required|string',
+        //      'year' => 'required|integer',
+        //  ]);
+
+        try{
+
+            $validatedData = $request->validated();
+            foreach($validatedData as $key => $value){
+                print($key);
+                print($value);
+            }
+            
+         $book = Book::create($validatedData);
  
-         $book = Book::create($request->all());
- 
-         return response()->json($book, 201);
+         return response()->json([
+            "message" => "Book created",
+            "data" => $book
+        ], 201);
+    }catch(\Exception $e){
+        print("hao");
+
+        return response()->json([
+            "message" => "Book not created"], 400);
      }
+    }
  
      // Tampilkan buku berdasarkan ID
      public function show($id)
