@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Peminjaman;
 use App\Models\Book;
+use Illuminate\Support\Facades\Validator;
+
 
 class PeminjamanController extends Controller
 {
@@ -18,12 +20,29 @@ class PeminjamanController extends Controller
   // Tambah peminjaman baru
   public function store(Request $request)
   {
-      $request->validate([
-          'book_id' => 'required|exists:books,id',
-          'borrower_name' => 'required|string',
-          'borrow_date' => 'required|date',
-          'return_date' => 'nullable|date',
-      ]);
+    $validData = Validator::make($request->all(), [
+        'book_id' => 'required|exists:books,id',
+        'borrower_name' => 'required|string',
+        'borrow_date' => 'required|date',
+        'return_date' => 'nullable|date',
+    ],
+    [
+        'book_id.required' => 'book_id wajib diisi',
+        'book_id.exists' => 'book_id tidak ditemukan',
+        'borrower_name.required' => 'borrower_name wajib diisi',
+        'borrower_name.string' => 'borrower_name harus string',
+        'borrow_date.required' => 'borrow_date wajib diisi',
+        'borrow_date.date' => 'borrow_date harus date',
+        'return_date.date' => 'return_date harus date',
+    ]
+);
+    if ($validData->fails()) {
+        return response()->json([
+            'message' => 'Validation Error',
+            'errors' => $validData->errors()
+        ], 422);
+    }
+      
     //   ketika dipinjam, jumlah buku nya berkurang 1  dan statusnya menjadi dipinjam, kemudian jika jumlah bukunya kurang dari 1, maka tidak bisa dipinjam
         $book = Book::findOrFail($request->book_id);
         // log data buku di terminal
@@ -39,7 +58,7 @@ class PeminjamanController extends Controller
         $book->save();
 
 
-      $peminjaman = Peminjaman::create($request->all());
+      $peminjaman = Peminjaman::create($validData->validated());
 
       return response()->json($peminjaman, 201);
   }

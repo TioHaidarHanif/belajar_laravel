@@ -9,8 +9,11 @@
 - coba run dengan cara testing
 
 
+29/12/2024
+- Push image DockerHub menggunakan github action
+
 # Todo
-- Push image DockerHub
+- validation input & error handling
 - Deployment Kubernetes
 - Managed host Ansible
 - Monitoring & Visualisasi make Prameteus dan Grafana 

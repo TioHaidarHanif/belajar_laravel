@@ -24,7 +24,7 @@ class BookPostRequest extends FormRequest
         return [
             'title' => 'required|string',
             'author' => ['required', 'string'],
-            'year' => ['required', 'integer'],
+            'year' => ['required', 'integer']
         ];
     }
     

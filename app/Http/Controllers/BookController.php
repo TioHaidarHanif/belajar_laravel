@@ -4,8 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+
+
+
 use App\Http\Requests\BookPostRequest;
 use App\Models\Book;
+use Illuminate\Support\Facades\Validator;
+
+
 
 class BookController extends Controller
 {
@@ -16,37 +23,33 @@ class BookController extends Controller
      }
  
      // Tambah buku baru
-     public function store(BookPostRequest $request)
+     public function store(Request $request)
      {
-
-        //  $request->validate([
-        //      'title' => 'required|string',
-        //      'author' => 'required|string',
-        //      'year' => 'required|integer',
-        //  ]);
-
-        try{
-
-            $validatedData = $request->validated();
-            foreach($validatedData as $key => $value){
-                print($key);
-                print($value);
-            }
-            
-         $book = Book::create($validatedData);
- 
-         return response()->json([
-            "message" => "Book created",
-            "data" => $book
-        ], 201);
-    }catch(\Exception $e){
-        print("hao");
-
-        return response()->json([
-            "message" => "Book not created"], 400);
-     }
+        $validData = Validator::make($request->all(), [
+            'title' => 'required|string',
+            'author' => ['required', 'string'],
+            'year' => ['required', 'integer']
+        ],
+        [
+            'title.required' => 'Judul buku harus diisi',
+            'author.required' => 'Penulis buku harus diisi',
+            'year.required' => 'Tahun terbit buku harus diisi',
+            'year.integer' => 'Tahun terbit buku harus berupa angka',
+        ]
+        );
+        if ($validData->fails()) {
+            return response()->json([
+                'message' => 'Validation Error',
+                'errors' => $validData->errors()
+            ], 422);
+        }
+            $book = Book::create($validData->validated());
+            return response()->json([
+                "message" => "Book created",
+                "data" => $book
+            ], 201);
     }
- 
+    
      // Tampilkan buku berdasarkan ID
      public function show($id)
      {
@@ -58,14 +61,30 @@ class BookController extends Controller
      public function update(Request $request, $id)
      {
          $book = Book::findOrFail($id);
- 
-         $request->validate([
+         $validData =  Validator::make($request->all(), [
              'title' => 'string',
              'author' => 'string',
              'year' => 'integer',
-         ]);
+         ], 
+            [
+                'title.string' => 'Judul buku harus string',
+                'author.string' => 'Penulis buku harus string',
+                'year.integer' => 'Tahun terbit buku harus berupa angka',
+            ]
+        );
+
+            if ($validData->fails()) {
+                return response()->json([
+                    'message' => 'Validation Error',
+                    'errors' => $validData->errors()
+                ], 422);
+            }
+
+
+
  
-         $book->update($request->all());
+       
+         $book->update($validData->validated());
  
          return response()->json($book);
      }
