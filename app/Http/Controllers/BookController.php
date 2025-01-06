@@ -5,8 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
-
-
+use Illuminate\Support\Facades\Storage;
 
 use App\Http\Requests\BookPostRequest;
 use App\Models\Book;
@@ -55,10 +54,10 @@ class BookController extends Controller
             $coverPath = $cover->storeAs('uploads', $coverName, 'public');
         }
         $result = $request->all();
-        $result['cover'] = $coverPath;
+        $result['cover'] = Storage::url($coverPath);;
         
 
-            $book = Book::create();
+            $book = Book::create($result);
             return response()->json([
                 "message" => "Book created",
                 "data" => $book
