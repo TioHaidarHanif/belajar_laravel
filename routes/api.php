@@ -25,3 +25,21 @@ Route::put('/peminjamans/{id}/return', [PeminjamanController::class, 'returnBook
 // buat routes untuk melihat semua peminjaman yang belum dikembalikan
 
 Route::post('/upload', [FileUploadController::class, 'upload']);
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
+
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+
+// API untuk semua user
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/users', [UserController::class, 'index']); // Semua user bisa melihat data
+
+    // API untuk Admin
+    Route::middleware('role:admin')->group(function () {
+        Route::post('/users', [UserController::class, 'store']);   // Tambah user
+        Route::put('/users/{id}', [UserController::class, 'update']); // Ubah user
+        Route::delete('/users/{id}', [UserController::class, 'destroy']); // Hapus user
+    });
+});

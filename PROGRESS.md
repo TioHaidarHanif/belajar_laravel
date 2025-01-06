@@ -18,9 +18,10 @@
 - make docker untuk nge jalanin project, serta ngedit project
 6/12/2025
 - Upload File
+- Manajemen user (Login, Register, Logout)
+- Manejemen Role        
 
 # Todo
-- Manajemen user (Login, Register, Logout, Role)
 - JWT Token
 - Uji coba manajemen Database (relasi dkk)
 - validation input & error handling
