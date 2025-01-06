@@ -11,6 +11,7 @@ RUN php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 RUN apt-get update && apt-get install -y git
 RUN composer
 RUN composer install --no-scripts --no-autoloader
+RUN docker-php-ext-install mysqli pdo_mysql
 
 # Copy seluruh file proyek ke dalam container
 

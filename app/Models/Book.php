@@ -11,7 +11,7 @@ class Book extends Model
     use HasFactory;
 
     
-    protected $fillable = ['title', 'author', 'year'];
+    protected $fillable = ['title', 'author', 'year', 'cover'];
 
     // Relasi dengan tabel peminjaman
     public function peminjamans()

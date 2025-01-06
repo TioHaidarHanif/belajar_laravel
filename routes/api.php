@@ -1,4 +1,5 @@
 <?php
+use App\Http\Controllers\FileUploadController;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -22,3 +23,5 @@ Route::get('/token', function () {
 Route::put('/peminjamans/{id}/return', [PeminjamanController::class, 'returnBook']);
 // buat routes untuk melihat semua peminjaman yang sudah dikembalikan
 // buat routes untuk melihat semua peminjaman yang belum dikembalikan
+
+Route::post('/upload', [FileUploadController::class, 'upload']);
